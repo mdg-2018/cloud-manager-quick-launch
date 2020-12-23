@@ -3,9 +3,33 @@
 @inject NavigationManager navmgr;
 @inject IJSRuntime JSRuntime;
 
-<h1>TBD</h1>
+<h1>Launch A Rep Set</h1>
 
+<br />
+@if(!isLoading) {
+    <button class="btn btn-primary btn-lg" @onclick="LaunchIt">Launch a RepSet</button>
+} else {
+    <button class="btn btn-primary btn-lg" disabled><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Launching...</button>
+}
 
 @code {
+    private Resp r = null;
+    private string txt_name = "";
+    private bool isLoading = false;
+
+    private async void LaunchIt()
+    {
+        isLoading = true;
+        string userid = await JSRuntime.InvokeAsync<string>("getCurrentUser");
+        
+        r = await Http.GetFromJsonAsync<Resp>("/api/launch/"+userid);
+        
+        isLoading = false;
+        navmgr.NavigateTo("/Watch/foo", false);
+    }
+
+    public class Resp {
+        public string name { get; set; }
+    }
 
 }

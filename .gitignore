@@ -9,3 +9,4 @@ SPAWNHUB/SpawnHubSPA/obj
 SPAWNHUB/Dockerfile.bak
 deployConfig.json
 SPAWNHUB/AnsibleContent
+credentials

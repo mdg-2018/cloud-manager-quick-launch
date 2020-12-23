@@ -42,7 +42,7 @@
             delete_on_termination: true
         instance_tags:
           Name: mg_ansible_test
-          owner: matthew.grogan
+          owner: {{ ownerUserName }}
           expire-on: "2020-10-30"
           purpose: "training"
       register: ec2

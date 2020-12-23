@@ -11,10 +11,10 @@ from subprocess import Popen, PIPE
 ##########
 # FUNCTIONS
 ##########
-def runPlaybook(self, callingUserName, pfilename, keypath, user):
+def runPlaybook(self, callingUserName, pfilename):
     uid = str(uuid.uuid4())[:8]
     # build command to run an run it
-    cmd = "ansible-playbook "+pfilename+" --key-file " + keypath + " --user " + user
+    cmd = "ansible-playbook "+pfilename+' --extra-vars "ownerUserName='+callingUserName+'"'
     o = subprocess.Popen(cmd.split(" "), stdout = subprocess.PIPE).communicate()[0]
     return o
 
@@ -31,7 +31,7 @@ class Handler_API_HelloWorld(tornado.web.RequestHandler):
 
 class Handler_API_Launch(tornado.web.RequestHandler):
     def get(self, username):
-        self.write("Hello, "+ username)
+        self.write("Hello, "+ username, "/opt/AnsibleContent/playbook.yaml")
         runPlaybook(username, )
 
 ##########
@@ -45,6 +45,8 @@ app= tornado.web.Application([
     (r"/api/helloworld", Handler_API_HelloWorld),
     (r"/api/launch/(.*)", Handler_API_Launch),
     (r"/css/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/css" }),
+    (r"/js/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/js" }),
+    (r"/resources/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/resources" }),
     (r"/_framework/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/_framework" }),
 ], **settings)
 app.listen(8000)

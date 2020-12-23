@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 LABEL maintainer="chris@grabosky.net"
-LABEL version="1.1.0"
+LABEL version="1.1.7"
 ENV CONTAINER_SHELL=bash
 ENV CONTAINER=
 
@@ -19,7 +19,8 @@ RUN apt-get clean && \
         vim \
         python3-distutils \
         ansible \
-        unzip
+        unzip \
+        curl
 
 # force specific version of python 3.7
 RUN ln -s /usr/bin/python3.7 /usr/bin/python3 -f
@@ -40,6 +41,7 @@ RUN ./aws/install
 COPY ./SpawnHub /opt/wwwroot
 COPY ./SpawnHubSPA/bin/Release/netstandard2.1/publish/wwwroot /opt/wwwroot/static
 COPY ./AnsibleContent /opt/
+COPY ./credentials /root/.aws/credentials
 
 # web server is python tornado which also powers API and runs on port 8000
 CMD ["python3", "/opt/wwwroot/SpawnHub/__init__.py"]

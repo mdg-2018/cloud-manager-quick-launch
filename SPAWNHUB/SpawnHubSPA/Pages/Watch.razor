@@ -1,0 +1,31 @@
+﻿@page "/Watch/{RunID}"
+@inject HttpClient Http
+@inject NavigationManager navmgr
+@inject IJSRuntime JSRuntime;
+
+<h1>Watch</h1>
+
+@if (loading)
+{
+    <p><em>Loading...</em></p>
+    <div class="spinner-border text-success" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+}
+else
+{
+    <h1>TBD</h1>
+}
+
+@code {
+    [Parameter]
+    public string RunID {get; set;}
+
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+    }
+
+}
