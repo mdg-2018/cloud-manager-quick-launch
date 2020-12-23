@@ -10,3 +10,4 @@ SPAWNHUB/Dockerfile.bak
 deployConfig.json
 SPAWNHUB/AnsibleContent
 credentials
+awsconfig

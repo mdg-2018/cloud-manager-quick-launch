@@ -14,7 +14,7 @@ from subprocess import Popen, PIPE
 def runPlaybook(self, callingUserName, pfilename):
     uid = str(uuid.uuid4())[:8]
     # build command to run an run it
-    cmd = "ansible-playbook "+pfilename+' --extra-vars "ownerUserName='+callingUserName+'"'
+    cmd = "ansible-playbook "+pfilename+' --extra-vars "ownerUserName='+callingUserName+'" & > /opt/wwwroot/static/output/'+callingUserName+'.txt 2>&1'
     o = subprocess.Popen(cmd.split(" "), stdout = subprocess.PIPE).communicate()[0]
     return o
 
@@ -31,8 +31,8 @@ class Handler_API_HelloWorld(tornado.web.RequestHandler):
 
 class Handler_API_Launch(tornado.web.RequestHandler):
     def get(self, username):
-        self.write("Hello, "+ username, "/opt/AnsibleContent/playbook.yaml")
-        runPlaybook(username, )
+        runPlaybook(username, "/opt/AnsibleContent/playbook.yaml")
+        self.write("Hello, "+ username)
 
 ##########
 # MAIN

@@ -48,6 +48,7 @@ cp ../automation-agent.j2 ./AnsibleContent/
 cp ../deployConfig.json ./AnsibleContent/
 cp ../playbook.yaml ./AnsibleContent/
 cp ../credentials ./
+cp ../awsconfig ./awsconfig
 cp -r ../tls ./AnsibleContent/
 cp -r ../src ./AnsibleContent/
 

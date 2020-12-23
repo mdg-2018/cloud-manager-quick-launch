@@ -7,15 +7,15 @@
     # - name: create ca pem file
     #   shell: ./tls/generateTLS/genCA.sh
     - name: create client pem file
-      shell: ./tls/generateTLS/genClient.sh
+      shell: /opt/AnsibleContent/tls/generateTLS/genClient.sh
     - name: client cert to connections directory
       copy:
-        src: ./tls/generateTLS/keys/out/client.pem
+        src: /opt/AnsibleContent/tls/generateTLS/keys/out/client.pem
         dest: ./connections/client.pem
         mode: '0644'
     - name: Copy CA file to connections directory
       copy:
-        src: ./tls/generateTLS/keys/ca.pem
+        src: /opt/AnsibleContent/tls/generateTLS/keys/ca.pem
         dest: ./connections/ca.pem
         mode: '0644'
 
@@ -42,7 +42,7 @@
             delete_on_termination: true
         instance_tags:
           Name: mg_ansible_test
-          owner: {{ ownerUserName }}
+          owner: "{{ ownerUserName }}"
           expire-on: "2020-10-30"
           purpose: "training"
       register: ec2
