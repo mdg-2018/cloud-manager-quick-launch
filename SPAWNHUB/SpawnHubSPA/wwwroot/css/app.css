@@ -45,7 +45,8 @@ app {
     }
 
     .sidebar .navbar-brand {
-        font-size: 1.1rem;
+        font-size: .75rem;
+        font-weight: bold;
     }
 
     .sidebar .oi {
@@ -172,17 +173,4 @@ app {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
-}
-
-.bottom-row {
-    position: absolute;
-    bottom: 0;
-    color: #FAFBFC;
-    font-size:32px;
-    width:100%;
-    text-align:center;
-}
-
-.img_profile {
-    border-radius: 50%;
 }

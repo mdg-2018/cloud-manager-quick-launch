@@ -41,16 +41,26 @@ dotnet publish -c Release
 cd ..
 
 echo 
+echo "SPAWNHUB: Copying Ansible"
+echo
+cp ../ansible.cfg ./AnsibleContent/
+cp ../automation-agent.j2 ./AnsibleContent/
+cp ../deployConfig.json ./AnsibleContent/
+cp ../playbook.yaml ./AnsibleContent/
+cp -r ../tls ./AnsibleContent/
+cp -r ../src ./AnsibleContent/
+
+echo 
 echo "SPAWNHUB: Building container"
 echo
-docker build -t graboskyc/mongodb-sa-sm-spawnhub:latest -t graboskyc/mongodb-sa-sm-spawnhub:latest:v${nb} .
+docker build -t graboskyc/mongodb-sa-sm-spawnhub:latest -t graboskyc/mongodb-sa-sm-spawnhub:v${nb} .
 
 echo 
 echo "SPAWNHUB: Starting container"
 echo
-docker stop testqamdbsash
-docker rm testqamdbsash
-docker run -t -i -d -p 8000:8000 --name testqamdbsash --restart unless-stopped -v /var/run/docker.sock:/var/run/docker.sock graboskyc/mongodb-sa-sm-spawnhub:latest:v${nb}
+docker stop testqacmsh
+docker rm testqacmsh
+docker run -t -i -d -p 8000:8000 --name testqacmsh --restart unless-stopped -v /var/run/docker.sock:/var/run/docker.sock graboskyc/mongodb-sa-sm-spawnhub:v${nb}
 
 echo
 echo "+======================"

@@ -8,60 +8,18 @@
     <base href="/" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
+    <link href="css/spawnhub.css" rel="stylesheet" />
     <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.4.0/stitch.js"></script>
-
-    <script>
-
-        const client = stitch.Stitch.initializeDefaultAppClient("mside-rqcve");
-
-        if (client.auth.hasRedirectResult()) {
-            client.auth.handleRedirectResult().then(user => {
-                console.log(user);
-            });
-        }
-
-        var errCt = 0;
-
-        window.login = async function(){
-            try {
-                if (!client.auth.isLoggedIn) {
-                    const credential = new stitch.GoogleRedirectCredential(window.location.origin);
-                    client.auth.loginWithRedirect(credential);
-                } else {
-                    console.log(client.auth.currentUser);
-                }
-            }
-            catch(e) {
-                errCt++;
-                console.log("try " + errCt);
-                console.log(e);
-                if(errCt < 5) {
-                    setTimeout(function() { login();}, 500);
-                }
-            }
-        }
-
-        window.getCurrentUserName = async function() {
-            return client.auth.currentUser.profile.name||"";
-        }
-
-        window.getCurrentUserIcon = async function() {
-            return client.auth.currentUser.profile.pictureUrl||"/user.png";
-        }
-
-        window.getCurrentUser = async function() {
-            return client.auth.currentUser.id;
-        }
-
-        window.getCurrentUserEmail = async function() {
-            return (client.auth.currentUser.profile.email.replace("@","").replace(/\./g,"")||"UNKNOWNUNKNOWNUNKNOWN");
-        }
-
-    </script>
 </head>
 
 <body>
-    <app>Loading...</app>
+    <app>
+        <div class="ctr_spin_parent">
+            <div class="ctr_spin_child">
+                <img src="resources/loader.png" class="aniloader"/>
+            </div>
+        </div>
+    </app>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
@@ -69,6 +27,8 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script src="js/realmHooks.js"></script>
 </body>
 
 </html>

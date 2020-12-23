@@ -71,7 +71,7 @@
   remote_user: ubuntu
   become: yes
   vars_files:
-    - deploymentConfig.json
+    - deployConfig.json
   tasks:
     - debug:
         msg: "Hostnames: {{ dns_name_pub }}"
