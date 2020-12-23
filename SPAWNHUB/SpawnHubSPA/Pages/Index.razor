@@ -1,0 +1,32 @@
+﻿@page "/"
+@inject HttpClient Http
+@inject NavigationManager navmgr
+@inject IJSRuntime JSRuntime;
+
+<h1>What is running</h1>
+
+@if ((containers == null) || loading)
+{
+    <p><em>Loading...</em></p>
+    <div class="spinner-border text-success" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+}
+else
+{
+    <h1>TBD</h1>
+}
+
+@code {
+    private string uri;
+    private bool loading = true;
+
+    private string[] protectedContainers = {"testqamdbsash", "testqamdbsajup", "mdbsajup", "mdbsash", "wbrs"};
+    private string userid = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+    }
+
+}

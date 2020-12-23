@@ -4,3 +4,6 @@ deploymentConfig_dev.json
 test
 connections/*.pem
 connections/*.txt
+SPAWNHUB/SpawnHubSPA/bin
+SPAWNHUB/SpawnHubSPA/obj
+SPAWNHUB/Dockerfile.bak
