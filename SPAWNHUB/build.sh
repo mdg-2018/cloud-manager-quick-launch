@@ -37,7 +37,7 @@ echo
 echo "SPAWNHUB: Building SPA"
 echo
 cd SpawnHubSPA
-dotnet publish
+dotnet publish -c Release
 cd ..
 
 echo 

@@ -40,7 +40,7 @@ RUN python3 -m pip install dnspython pymongo tornado requests six docker
 
 # copy over Blazor WASM front end and calls backend python API
 COPY ./SpawnHub /opt/wwwroot
-COPY ./SpawnHubSPA/bin/Debug/netstandard2.1/publish/wwwroot /opt/wwwroot/static
+COPY ./SpawnHubSPA/bin/Release/netstandard2.1/publish/wwwroot /opt/wwwroot/static
 
 # web server is python tornado which also powers API and runs on port 8000
 CMD ["python3", "/opt/wwwroot/SpawnHub/__init__.py"]
