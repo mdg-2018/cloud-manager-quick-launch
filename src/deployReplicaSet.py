@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/python3
 import requests
 import json
 from requests.auth import HTTPDigestAuth
@@ -6,14 +6,14 @@ import sys
 import os.path
 
 # import config file
-deploymentConfig = json.load(open('deploymentConfig.json'))
+deploymentConfig = json.load(open('/opt/AnsibleContent/deployConfig.json'))
 
 projectID = deploymentConfig['projectID']
 
 # build list of servers
-servers = sys.argv
-servers.pop(0)
-servers = servers[0].replace("[","")
+servers = sys.argv[1]
+servers = servers.replace("[u","")
+servers = servers.replace("[","")
 servers = servers.replace("]","")
 servers = servers.replace("'","")
 servers = servers.replace("\"","")
@@ -25,8 +25,7 @@ servers = servers.split(",")
 # get current automation config
 rootURL = deploymentConfig['rootURL']
 URL = rootURL + "/api/public/v1.0/groups/" + projectID + "/automationConfig"
-automationConfig = requests.get(URL, auth=HTTPDigestAuth(
-    deploymentConfig['apiPublicKey'], deploymentConfig['apiPrivateKey']))
+automationConfig = requests.get(URL, auth=HTTPDigestAuth(deploymentConfig['apiPublicKey'], deploymentConfig['apiPrivateKey']))
 newConfig = automationConfig.json()
 
 # add monitoring and backup to each server
@@ -98,7 +97,7 @@ newConfig['replicaSets'].append(newRS)
 newConfig['tls']['CAFilePath'] = "/etc/ssl/certs/mdbserverCA.pem"
 newConfig['tls']['clientCertificateMode'] = "REQUIRE"
 
-result = requests.put(URL,data=json.dumps(newConfig),headers={"Content-Type":"application/json"},auth=HTTPDigestAuth(deploymentConfig.apiPublicKey, deploymentConfig.apiPrivateKey))
+result = requests.put(URL,data=json.dumps(newConfig),headers={"Content-Type":"application/json"},auth=HTTPDigestAuth(deploymentConfig['apiPublicKey'], deploymentConfig['apiPrivateKey']))
 
 # create connection string
 connString="mongodb://username:password@"

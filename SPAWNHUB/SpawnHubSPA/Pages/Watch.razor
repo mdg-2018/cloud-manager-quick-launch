@@ -40,7 +40,8 @@ else
     {
         loading = true;
         RefreshData();
-        un = await JSRuntime.InvokeAsync<string>("getCurrentUserName").ToString().ToLower().Replace(" ",".");
+        un = await JSRuntime.InvokeAsync<string>("getCurrentUserName");
+        un = un.ToLower().Replace(" ",".");
         loading = false;
     }
 
