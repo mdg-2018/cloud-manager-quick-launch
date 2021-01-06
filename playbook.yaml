@@ -4,8 +4,8 @@
   connection: local
   tasks:
     # generate keys - modify tls/genCA.sh if you don't need a new CA
-    # - name: create ca pem file
-    #   shell: ./tls/generateTLS/genCA.sh
+    - name: create ca pem file
+      shell: ./tls/generateTLS/genCA.sh
     - name: create client pem file
       shell: /opt/AnsibleContent/tls/generateTLS/genClient.sh
     - name: client cert to connections directory
@@ -23,10 +23,12 @@
 # Launch EC2 Instances
 - name: Ansible test
   hosts: localhost
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   tasks:
     - name: launching AWS instance using Ansible
       ec2:
-        profile: matt
+        profile: default
         instance_type: t2.micro
         image: ami-07efac79022b86107
         wait: yes
@@ -34,14 +36,14 @@
         assign_public_ip: yes
         vpc_subnet_id: subnet-53f0df19
         region: us-east-2
-        key_name: mdg_key
+        key_name: gskygrogan_cmdemo
         volumes:
           - device_name: /dev/xvdb
             volume_type: gp2
             volume_size: 10
             delete_on_termination: true
         instance_tags:
-          Name: mg_ansible_test
+          Name: mside_launched_cm_instances
           owner: "{{ ownerUserName }}"
           expire-on: "2020-10-30"
           purpose: "training"

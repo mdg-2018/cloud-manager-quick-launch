@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 LABEL maintainer="chris@grabosky.net"
-LABEL version="1.1.11"
+LABEL version="1.1.14"
 ENV CONTAINER_SHELL=bash
 ENV CONTAINER=
 
@@ -31,7 +31,7 @@ RUN wget -O get-pip.py https://bootstrap.pypa.io/get-pip.py
 RUN python3 get-pip.py
 
 # install pip required packages
-RUN python3 -m pip install dnspython pymongo tornado requests six docker
+RUN python3 -m pip install dnspython pymongo tornado requests six docker boto3 boto
 
 # install aws cli
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -46,6 +46,8 @@ COPY ./credentials /root/.aws/credentials
 COPY ./awsconfig /root/.aws/config
 RUN dos2unix /opt/AnsibleContent/tls/generateTLS/*; dos2unix /opt/AnsibleContent/src/*
 RUN mkdir -p /opt/AnsibleContent/tls/generateTLS/keys/out
+RUN mkdir -p /opt/AnsibleContent/connections
+RUN chmod 600 /opt/AnsibleContent/key.pem
 
 # web server is python tornado which also powers API and runs on port 8000
 CMD ["python3", "/opt/wwwroot/SpawnHub/__init__.py"]

@@ -5,5 +5,6 @@
     "rootURL": "https://cloud.mongodb.com",
     "mmsGroupId": "",
     "mmsApiKey": "",
-    "ansible_ssh_private_key_file": "/path/to/pem/file"
+    "ansible_ssh_private_key_file": "/path/to/pem/file",
+    "ansible_python_interpreter": "/usr/bin/python3"
 }
