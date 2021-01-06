@@ -52,6 +52,7 @@ cp ../credentials ./
 cp ../awsconfig ./awsconfig
 cp -r ../tls ./AnsibleContent/
 cp -r ../src ./AnsibleContent/
+cp ../thp.service ./AnsibleContent/
 
 echo 
 echo "SPAWNHUB: Building container"

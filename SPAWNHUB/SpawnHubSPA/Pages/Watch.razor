@@ -14,7 +14,10 @@
 }
 else
 {
-    <h1>TBD</h1>
+    <h1>Ansible Output</h1>
+    <iframe style="width:100%; height:200px;border:none;" src="/output/@un.txt?ts=@ts"></iframe>
+
+    <button class="btn btn-primary btn-lg" @onclick="RefreshData">Refresh</button>
 }
 
 @code {
@@ -23,9 +26,22 @@ else
 
     private bool loading = true;
 
+    private string ts = null;
+    private string un = null;
+
+    private async void RefreshData() {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            TimeSpan diff = DateTime.Now.ToUniversalTime() - origin;
+            ts = Math.Floor(diff.TotalSeconds).ToString();
+    }
+
+
     protected override async Task OnInitializedAsync()
     {
         loading = true;
+        RefreshData();
+        un = await JSRuntime.InvokeAsync<string>("getCurrentUserName").ToString().ToLower().Replace(" ",".");
+        loading = false;
     }
 
 }
