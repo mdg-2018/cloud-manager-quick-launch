@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 LABEL maintainer="chris@grabosky.net"
-LABEL version="1.1.15"
+LABEL version="1.1.19"
 ENV CONTAINER_SHELL=bash
 ENV CONTAINER=
 
@@ -18,10 +18,17 @@ RUN apt-get clean && \
         wget \
         vim \
         python3-distutils \
-        ansible \
         unzip \
         dos2unix \
-        curl
+        curl \
+        software-properties-common \
+        python-apt
+
+# force newer version of ansible
+# this must be first before 3.7 change...
+RUN ln -s /usr/bin/python3.6 /usr/bin/python3 -f
+RUN add-apt-repository -y ppa:ansible/ansible
+RUN apt-get update && apt-get install -y ansible
 
 # force specific version of python 3.7
 RUN ln -s /usr/bin/python3.7 /usr/bin/python3 -f

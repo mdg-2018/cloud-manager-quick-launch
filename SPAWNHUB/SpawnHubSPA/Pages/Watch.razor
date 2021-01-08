@@ -15,7 +15,7 @@
 else
 {
     <h1>Ansible Output</h1>
-    <iframe style="width:100%; height:200px;border:none;" src="/output/@un.txt?ts=@ts"></iframe>
+    <iframe style="width:100%; height:200px;border:none;" src="/output/@un?ts=@ts"></iframe>
 
     <button class="btn btn-primary btn-lg" @onclick="RefreshData">Refresh</button>
 }
@@ -41,7 +41,7 @@ else
         loading = true;
         RefreshData();
         un = await JSRuntime.InvokeAsync<string>("getCurrentUserName");
-        un = un.ToLower().Replace(" ",".");
+        un = un.ToLower().Replace(" ",".")+".txt";
         loading = false;
     }
 
