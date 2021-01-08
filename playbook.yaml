@@ -184,9 +184,9 @@
         mode: '0644'
     # set hostname to AWS public hostname
     ## TODO: set this up with some proper DNS since public hostname on aws instances can change after reboot! Or just use private dns name... idk...
-    #- name: set hostname
-    #  hostname:
-    #    name: "{{ dns_name_pub }}"
+    - name: set hostname
+      hostname:
+        name: "{{ dns_name_pub }}"
     # start agents
     - name: Start and enable automation agent
       systemd:
