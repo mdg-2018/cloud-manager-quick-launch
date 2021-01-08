@@ -15,7 +15,7 @@
 else
 {
     <h1>Ansible Output</h1>
-    <iframe style="width:100%; height:200px;border:none;" src="/output/@un?ts=@ts"></iframe>
+    <iframe style="width:100%; height:200px;border:none;" src="/output/@fn?ts=@ts"></iframe>
 
     <button class="btn btn-primary btn-lg" @onclick="RefreshData">Refresh</button>
 }
@@ -27,7 +27,7 @@ else
     private bool loading = true;
 
     private string ts = null;
-    private string un = null;
+    private string fn = null;
 
     private async void RefreshData() {
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -40,8 +40,8 @@ else
     {
         loading = true;
         RefreshData();
-        un = await JSRuntime.InvokeAsync<string>("getCurrentUserName");
-        un = un.ToLower().Replace(" ",".")+".txt";
+        fn = RunID;
+        fn = fn+".txt";
         loading = false;
     }
 

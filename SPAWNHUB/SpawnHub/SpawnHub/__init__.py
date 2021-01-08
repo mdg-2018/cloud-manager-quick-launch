@@ -14,9 +14,9 @@ from subprocess import Popen, PIPE
 def runPlaybook(self, callingUserName, pfilename):
     uid = str(uuid.uuid4())[:8]
     # build command to run an run it
-    cmd = "ansible-playbook "+pfilename+' --extra-vars "ownerUserName='+callingUserName+'" & > /opt/wwwroot/static/output/'+callingUserName+'.txt 2>&1'
+    cmd = "ansible-playbook /opt/AnsibleContent/playbook.yaml --extra-vars \"ownerUserName="+callingUserName+"\" > /opt/wwwroot/static/output/"+callingUserName+".txt 2>&1'
     o = subprocess.Popen(cmd.split(" "), stdout = subprocess.PIPE).communicate()[0]
-    return o
+    return cmd
 
 ##########
 # API
@@ -46,6 +46,7 @@ app= tornado.web.Application([
     (r"/api/launch/(.*)", Handler_API_Launch),
     (r"/css/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/css" }),
     (r"/js/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/js" }),
+    (r"/output/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/output" }),
     (r"/resources/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/resources" }),
     (r"/_framework/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/_framework" }),
 ], **settings)
