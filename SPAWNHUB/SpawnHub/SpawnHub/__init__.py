@@ -7,6 +7,7 @@ import os
 import docker
 import uuid
 from subprocess import Popen, PIPE
+import subprocess
 
 ##########
 # FUNCTIONS
@@ -14,7 +15,7 @@ from subprocess import Popen, PIPE
 def runPlaybook(self, callingUserName, pfilename):
     uid = str(uuid.uuid4())[:8]
     # build command to run an run it
-    cmd = "ansible-playbook /opt/AnsibleContent/playbook.yaml --extra-vars \"ownerUserName="+callingUserName+"\" > /opt/wwwroot/static/output/"+callingUserName+".txt 2>&1'
+    cmd = "ansible-playbook {0} --extra-vars 'ownerUserName={1}' > /opt/wwwroot/static/output/{1} 2>&1".format(pfilename,callingUserName)
     o = subprocess.Popen(cmd.split(" "), stdout = subprocess.PIPE).communicate()[0]
     return cmd
 
@@ -31,8 +32,13 @@ class Handler_API_HelloWorld(tornado.web.RequestHandler):
 
 class Handler_API_Launch(tornado.web.RequestHandler):
     def get(self, username):
-        runPlaybook(username, "/opt/AnsibleContent/playbook.yaml")
-        self.write("Hello, "+ username)
+        pbPath = "/opt/AnsibleContent/playbook.yaml"
+        #runPlaybook(username, pbPath)
+        uid = str(uuid.uuid4())[:8]
+        # build command to run an run it
+        cmd = "ansible-playbook {0} --extra-vars 'ownerUserName={1}' > /opt/wwwroot/static/output/{1} 2>&1".format(pbPath,username+".txt")
+        o = subprocess.Popen(cmd, shell=True, cwd="/opt/AnsibleContent",stdout = subprocess.PIPE).communicate()[0]
+        self.write("Running, "+ username)
 
 ##########
 # MAIN
