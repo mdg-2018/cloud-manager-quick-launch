@@ -21,9 +21,15 @@
     private async void LaunchIt()
     {
         isLoading = true;
-        string userid = await JSRuntime.InvokeAsync<string>("getCurrentUser");
+        string userid = await JSRuntime.InvokeAsync<string>("getCurrentUserName");
+        userid = userid.Replace(" ", ".").ToLower();
         
-        r = await Http.GetFromJsonAsync<Resp>("/api/launch/"+userid);
+        try{
+            r = await Http.GetFromJsonAsync<Resp>("/api/launch/"+userid);
+            Console.WriteLine(r.ToString());
+        } catch (Exception ex) {
+            Console.WriteLine(ex.ToString());
+        }
         
         isLoading = false;
         navmgr.NavigateTo("/Watch/"+userid, false);

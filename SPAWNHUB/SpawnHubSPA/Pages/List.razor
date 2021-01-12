@@ -1,0 +1,33 @@
+@page "/List"
+@inject HttpClient Http;
+@inject NavigationManager navmgr;
+@inject IJSRuntime JSRuntime;
+
+<h1>List Logs</h1>
+
+<br />
+
+<ul>
+    @if(r != null) {
+        @foreach (var f in r.files)
+        {
+            <li><a href="Watch/@f">@f</a></li>
+        }
+    }
+</ul>
+
+
+
+@code {
+    private Resp r = null;
+
+    public class Resp {
+        public string[] files { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        r = await Http.GetFromJsonAsync<Resp>("/api/list");
+    }
+
+}

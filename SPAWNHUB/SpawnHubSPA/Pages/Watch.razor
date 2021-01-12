@@ -3,7 +3,7 @@
 @inject NavigationManager navmgr
 @inject IJSRuntime JSRuntime;
 
-<h1>Watch</h1>
+<h1>Watching @fn</h1>
 
 @if (loading)
 {
@@ -14,10 +14,9 @@
 }
 else
 {
-    <h1>Ansible Output</h1>
-    <iframe style="width:100%; height:200px;border:none;" src="/output/@fn?ts=@ts"></iframe>
+    <h1>Ansible Output</h1> <button class="btn btn-primary btn-lg" @onclick="RefreshData">Refresh</button>
 
-    <button class="btn btn-primary btn-lg" @onclick="RefreshData">Refresh</button>
+    <iframe style="width:100%; height:600px;" src="/output/@fn?ts=@ts"></iframe>    
 }
 
 @code {
@@ -27,7 +26,7 @@ else
     private bool loading = true;
 
     private string ts = null;
-    private string fn = null;
+    private string fn = "";
 
     private async void RefreshData() {
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);

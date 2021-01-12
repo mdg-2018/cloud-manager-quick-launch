@@ -4,20 +4,14 @@ import tornado
 from tornado import web
 import tornado.ioloop
 import os
-import docker
 import uuid
 from subprocess import Popen, PIPE
 import subprocess
+from tornado import gen
 
 ##########
 # FUNCTIONS
 ##########
-def runPlaybook(self, callingUserName, pfilename):
-    uid = str(uuid.uuid4())[:8]
-    # build command to run an run it
-    cmd = "ansible-playbook {0} --extra-vars 'ownerUserName={1}' > /opt/wwwroot/static/output/{1} 2>&1".format(pfilename,callingUserName)
-    o = subprocess.Popen(cmd.split(" "), stdout = subprocess.PIPE).communicate()[0]
-    return cmd
 
 ##########
 # API
@@ -31,14 +25,20 @@ class Handler_API_HelloWorld(tornado.web.RequestHandler):
         self.write("Hello, world")
 
 class Handler_API_Launch(tornado.web.RequestHandler):
-    def get(self, username):
+    async def get(self, username):
         pbPath = "/opt/AnsibleContent/playbook.yaml"
-        #runPlaybook(username, pbPath)
         uid = str(uuid.uuid4())[:8]
         # build command to run an run it
-        cmd = "ansible-playbook {0} --extra-vars 'ownerUserName={1}' > /opt/wwwroot/static/output/{1} 2>&1".format(pbPath,username+".txt")
-        o = subprocess.Popen(cmd, shell=True, cwd="/opt/AnsibleContent",stdout = subprocess.PIPE).communicate()[0]
+        cmd = "ansible-playbook {0} --extra-vars 'ownerUserName={1}' > /opt/wwwroot/static/output/{1}.txt 2>&1".format(pbPath,username)
+        subprocess.Popen(cmd, shell=True, cwd="/opt/AnsibleContent",stdout = subprocess.PIPE)
         self.write("Running, "+ username)
+
+class Handler_API_List(tornado.web.RequestHandler):
+    def get(self):
+        files = os.listdir("/opt/wwwroot/static/output")
+        retDoc = {}
+        retDoc["files"] = files
+        self.write(json.dumps(retDoc))        
 
 ##########
 # MAIN
@@ -49,6 +49,7 @@ settings = {}
 app= tornado.web.Application([
     (r"/", Handler_Main),
     (r"/api/helloworld", Handler_API_HelloWorld),
+    (r"/api/list", Handler_API_List),
     (r"/api/launch/(.*)", Handler_API_Launch),
     (r"/css/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/css" }),
     (r"/js/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/js" }),
