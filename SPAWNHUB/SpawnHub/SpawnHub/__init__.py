@@ -8,6 +8,7 @@ import uuid
 from subprocess import Popen, PIPE
 import subprocess
 from tornado import gen
+import json
 
 ##########
 # FUNCTIONS
@@ -34,11 +35,16 @@ class Handler_API_Launch(tornado.web.RequestHandler):
         self.write("Running, "+ username)
 
 class Handler_API_List(tornado.web.RequestHandler):
+    def set_default_headers(self):
+        self.set_header("Content-Type", "application/json; charset=UTF-8")
     def get(self):
         files = os.listdir("/opt/wwwroot/static/output")
         retDoc = {}
-        retDoc["files"] = files
-        self.write(json.dumps(retDoc))        
+        retDoc["files"] = []
+        for f in files:
+            retDoc["files"].append(f.split(".txt")[0])
+        self.write(json.dumps(retDoc))
+        self.set_header("Content-Type", "application/json; charset=UTF-8")
 
 ##########
 # MAIN

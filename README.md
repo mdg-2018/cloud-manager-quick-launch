@@ -57,3 +57,6 @@ docker exec -it testqacmsh /bin/bash
 cd /opt/AnsibleContent/
 ansible-playbook playbook.yaml --extra-vars "ownerUserName='chris.grabosky'"
 ```
+
+## Alt execution methodoogy
+If your system is already prepped locally with all required files, etc, you can just `deployConfig.json` and then run `ansible-playbook playbook.yaml --extra-vars "ownerUserName='matthew.grogans'"` for example
