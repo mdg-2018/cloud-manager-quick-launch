@@ -47,6 +47,7 @@ cp ../ansible.cfg ./AnsibleContent/
 cp ../automation-agent.j2 ./AnsibleContent/
 cp ../deployConfig.json ./AnsibleContent/
 cp ../playbook.yaml ./AnsibleContent/
+cp ../omPlaybook.yaml ./AnsibleContent/
 cp ../gskygrogan_cmdemo.pem ./AnsibleContent/key.pem
 cp ../credentials ./
 cp ../awsconfig ./awsconfig
@@ -64,7 +65,7 @@ echo "SPAWNHUB: Starting container"
 echo
 docker stop testqacmsh
 docker rm testqacmsh
-docker run -t -i -d -p 8000:8000 --name testqacmsh --restart unless-stopped -v /var/run/docker.sock:/var/run/docker.sock graboskyc/mongodb-sa-sm-spawnhub:v${nb}
+docker run -t -i -d -p 8000:8000 --name testqacmsh --restart unless-stopped -e "APIPW=bW9uZ29yb2Nrcw" -v /var/run/docker.sock:/var/run/docker.sock graboskyc/mongodb-sa-sm-spawnhub:v${nb}
 
 echo
 echo "+======================"

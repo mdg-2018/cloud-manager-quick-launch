@@ -1,13 +1,14 @@
-@page "/"
-@page "/Launch"
+@page "/LaunchCM"
 @inject HttpClient Http;
 @inject NavigationManager navmgr;
 @inject IJSRuntime JSRuntime;
 
-<h1>Launch A Rep Set</h1>
+<h1>Launch A Rep Set and Register with Cloud Manager</h1>
 
 <br />
 @if(!isLoading) {
+    <input type="text" @bind="txt_pw" @bind:event="onchange" placeholder="password" class="form-control form-control-lg" />
+    <br />
     <button class="btn btn-primary btn-lg" @onclick="LaunchIt">Launch a RepSet</button>
 } else {
     <button class="btn btn-primary btn-lg" disabled><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Launching...</button>
@@ -16,6 +17,7 @@
 @code {
     private Resp r = null;
     private string txt_name = "";
+    private string txt_pw="";
     private bool isLoading = false;
 
     private async void LaunchIt()
@@ -25,14 +27,14 @@
         userid = userid.Replace(" ", ".").ToLower();
         
         try{
-            r = await Http.GetFromJsonAsync<Resp>("/api/launch/"+userid);
+            r = await Http.GetFromJsonAsync<Resp>("/api/launchcm/"+userid+"/"+txt_pw);
             Console.WriteLine(r.ToString());
         } catch (Exception ex) {
             Console.WriteLine(ex.ToString());
         }
         
         isLoading = false;
-        navmgr.NavigateTo("/Watch/"+userid, false);
+        navmgr.NavigateTo("/Watch/"+userid+"_cm", false);
     }
 
     public class Resp {

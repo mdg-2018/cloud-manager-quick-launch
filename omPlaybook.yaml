@@ -1,0 +1,25 @@
+# Launch EC2 Instances
+- name: Ansible test
+  hosts: localhost
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: launching ops manager instance
+      ec2:
+        profile: default
+        instance_type: t3.xlarge
+        image: ami-0155ce198ae244377
+        wait: yes
+        count: 1 
+        assign_public_ip: yes
+        vpc_subnet_id: subnet-53f0df19
+        region: us-east-2
+        key_name: gskygrogan_cmdemo
+        instance_tags:
+          Name: mside_launched_om_instances
+          owner: "{{ ownerUserName }}"
+          expire-on: "2020-10-30"
+          purpose: "training"
+      register: ec2
+    - debug:
+        msg: "{{ ec2 }}"

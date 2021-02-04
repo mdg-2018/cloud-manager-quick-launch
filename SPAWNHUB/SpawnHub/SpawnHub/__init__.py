@@ -25,14 +25,25 @@ class Handler_API_HelloWorld(tornado.web.RequestHandler):
     def get(self):
         self.write("Hello, world")
 
-class Handler_API_Launch(tornado.web.RequestHandler):
-    async def get(self, username):
-        pbPath = "/opt/AnsibleContent/playbook.yaml"
-        uid = str(uuid.uuid4())[:8]
-        # build command to run an run it
-        cmd = "ansible-playbook {0} --extra-vars 'ownerUserName={1}' > /opt/wwwroot/static/output/{1}.txt 2>&1".format(pbPath,username)
-        subprocess.Popen(cmd, shell=True, cwd="/opt/AnsibleContent",stdout = subprocess.PIPE)
-        self.write("Running, "+ username)
+class Handler_CM_API_Launch(tornado.web.RequestHandler):
+    async def get(self, username, password):
+        if(password == os.environ['APIPW']):
+            pbPath = "/opt/AnsibleContent/playbook.yaml"
+            uid = str(uuid.uuid4())[:8]
+            # build command to run an run it
+            cmd = "ansible-playbook {0} --extra-vars 'ownerUserName={1}' > /opt/wwwroot/static/output/{1}_cm.txt 2>&1".format(pbPath,username)
+            subprocess.Popen(cmd, shell=True, cwd="/opt/AnsibleContent",stdout = subprocess.PIPE)
+            self.write("Running, "+ username)
+
+class Handler_OM_API_Launch(tornado.web.RequestHandler):
+    async def get(self, username, password):
+        if(password == os.environ['APIPW']):
+            pbPath = "/opt/AnsibleContent/omPlaybook.yaml"
+            uid = str(uuid.uuid4())[:8]
+            # build command to run an run it
+            cmd = "ansible-playbook {0} --extra-vars 'ownerUserName={1}' > /opt/wwwroot/static/output/{1}_om.txt 2>&1".format(pbPath,username)
+            subprocess.Popen(cmd, shell=True, cwd="/opt/AnsibleContent",stdout = subprocess.PIPE)
+            self.write("Running, "+ username)
 
 class Handler_API_List(tornado.web.RequestHandler):
     def set_default_headers(self):
@@ -56,7 +67,8 @@ app= tornado.web.Application([
     (r"/", Handler_Main),
     (r"/api/helloworld", Handler_API_HelloWorld),
     (r"/api/list", Handler_API_List),
-    (r"/api/launch/(.*)", Handler_API_Launch),
+    (r"/api/launchcm/(.*)/(.*)", Handler_CM_API_Launch),
+    (r"/api/launchom/(.*)/(.*)", Handler_OM_API_Launch),
     (r"/css/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/css" }),
     (r"/js/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/js" }),
     (r"/output/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/output" }),
