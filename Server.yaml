@@ -1,0 +1,12 @@
+metadata:
+  blueprint_author: graboskyc
+  blueprint_name: CM Quick Launch
+  blueprint_description: API to allow for deploying CM and OM instances with button press
+  blueprint_version: 1.1.0
+
+apiVersion: v1
+resources:
+  - name: mside CMQL Shared Infra
+    description: 
+    os: ubuntu2004
+    size: t2.micro
