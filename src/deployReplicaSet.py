@@ -11,7 +11,10 @@ deploymentConfig = json.load(open('/opt/AnsibleContent/deployConfig.json'))
 projectID = deploymentConfig['projectID']
 
 # build list of servers
-servers = sys.argv[1]
+serverList = sys.argv
+serverList.pop(0)
+emptyStr = ""
+servers = emptyStr.join(serverList)
 servers = servers.replace("[u","")
 servers = servers.replace("[","")
 servers = servers.replace("]","")
@@ -73,7 +76,7 @@ for server in servers:
       "net": {
         "port": 27017,
         "tls":{
-            "mode":"requireTLS",
+            "mode":"allowTLS",
             "certificateKeyFile":"/etc/ssl/certs/mdbserver.pem"
         }
       },
