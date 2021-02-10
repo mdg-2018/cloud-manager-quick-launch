@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/python3
 import requests
 import json
 from requests.auth import HTTPDigestAuth
