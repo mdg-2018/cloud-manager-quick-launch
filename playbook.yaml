@@ -207,4 +207,4 @@
       debug:
         msg: "{{ groups['launched'] }}"
     - name: deploy rep set
-      shell: "/opt/AnsibleContent/src/deployReplicaSet.py \"{{ groups['launched'] }}\" > connections/connString.txt"
+      shell: "/opt/AnsibleContent/src/deployReplicaSet.py \"{{ groups['launched'] | join(' ')  }}\" > connections/connString.txt"

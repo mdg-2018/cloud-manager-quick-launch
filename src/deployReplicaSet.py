@@ -11,19 +11,7 @@ deploymentConfig = json.load(open('/opt/AnsibleContent/deployConfig.json'))
 projectID = deploymentConfig['projectID']
 
 # build list of servers
-serverList = sys.argv
-serverList.pop(0)
-emptyStr = ""
-servers = emptyStr.join(serverList)
-servers = servers.replace("[u","")
-servers = servers.replace("[","")
-servers = servers.replace("]","")
-servers = servers.replace("'","")
-servers = servers.replace("\"","")
-servers = servers.replace("\n","")
-servers = servers.replace(" ","")
-servers = servers.replace(", ",",")
-servers = servers.split(",")
+servers = sys.argv[1].split(" ")
 
 # get current automation config
 rootURL = deploymentConfig['rootURL']
@@ -74,11 +62,11 @@ for server in servers:
     "processType": "mongod",
     "args2_6": {
       "net": {
-        "port": 27017,
-        "tls":{
-            "mode":"allowTLS",
-            "certificateKeyFile":"/etc/ssl/certs/mdbserver.pem"
-        }
+        "port": 27017
+        # ,"tls":{
+        #     "mode":"allowTLS",
+        #     "certificateKeyFile":"/etc/ssl/certs/mdbserver.pem"
+        # }
       },
       "storage": {
         "dbPath": "/data/" + newRSName
@@ -97,8 +85,8 @@ for server in servers:
 newConfig['replicaSets'].append(newRS)
 
 # set tls configuration
-newConfig['tls']['CAFilePath'] = "/etc/ssl/certs/mdbserverCA.pem"
-newConfig['tls']['clientCertificateMode'] = "REQUIRE"
+# newConfig['tls']['CAFilePath'] = "/etc/ssl/certs/mdbserverCA.pem"
+# newConfig['tls']['clientCertificateMode'] = "REQUIRE"
 
 result = requests.put(URL,data=json.dumps(newConfig),headers={"Content-Type":"application/json"},auth=HTTPDigestAuth(deploymentConfig['apiPublicKey'], deploymentConfig['apiPrivateKey']))
 
