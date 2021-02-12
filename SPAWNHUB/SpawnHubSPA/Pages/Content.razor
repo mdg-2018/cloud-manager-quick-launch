@@ -8,19 +8,21 @@
 <br />
 
 <div class="container">
-    @if(tiles != null) {
-        @foreach (var t in tiles)
-        {
-            <div class="card" style="width: 18rem;float:left;margin:10px;">
-                <img class="card-img-top" height="200" style="object-fit: cover;" src=@t.Icon >
-                <div class="card-body">
-                    <h5 class="card-title">@t.Title</h5>
-                    <p class="card-text">@t.Description</p>
-                    <a href=@t.Link class="btn btn-primary" target="_blank">Open</a>
+    <div class="d-flex flex-wrap">
+        @if(tiles != null) {
+            @foreach (var t in tiles)
+            {
+                <div class="card" style="width: 18rem;float:left;margin:10px;">
+                    <img class="card-img-top" height="200" style="object-fit: cover;" src=@t.Icon >
+                    <div class="card-body">
+                        <h5 class="card-title">@t.Title</h5>
+                        <p class="card-text">@t.Description</p>
+                        <a href=@t.Link class="btn btn-primary" target="_blank">Open</a>
+                    </div>
                 </div>
-            </div>
+            }
         }
-    }
+    </div>
 </div>
 
 
