@@ -61,7 +61,7 @@ class Handler_API_List(tornado.web.RequestHandler):
 # MAIN
 ##########
 
-settings = {}
+settings = {'default_handler_class':Handler_Main}
 
 app= tornado.web.Application([
     (r"/", Handler_Main),
