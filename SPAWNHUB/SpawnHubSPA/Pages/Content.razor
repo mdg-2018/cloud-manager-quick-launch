@@ -40,7 +40,8 @@
     protected override async Task OnInitializedAsync()
     {
         tiles = new List<Tile>();
-
+        
+        // main links
         tiles.Add(new Tile{ Title="Highspot", 
                             Icon="/resources/contentimg_highspot.jpg", 
                             Link="https://mongodb.highspot.com/spots/5f7627fc66bbaa55f542a763", 
@@ -49,6 +50,12 @@
                             Icon="/resources/contentimg_slack.png", 
                             Link="https://mongodb.slack.com/archives/C01B1P0U36U", 
                             Description="Our slack homepage is #presales-self-managed"});
+        tiles.Add(new Tile{ Title="Kafka Connector", 
+                            Icon="/resources/contentimg_kafka.png", 
+                            Link="http://kafka.mside.tech:9021/", 
+                            Description="Kafka Connector endpoint"});
+
+        // overview
         tiles.Add(new Tile{ Title="Design Overview", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1pM11zddHaX1rDySpk0dAtr3rmAL9GMvtVizFhPMsgqY/edit#slide=id.ga3e4658276_0_2315", 
