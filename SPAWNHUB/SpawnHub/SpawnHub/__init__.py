@@ -28,14 +28,17 @@ class Handler_API_HelloWorld(tornado.web.RequestHandler):
 class Handler_CM_API_Launch(tornado.web.RequestHandler):
     async def get(self, username):
         password = ""
+        count = "3"
         if self.get_argument("password") != None:
             password = self.get_argument("password")
+        if self.get_argument("count") != None:
+            password = self.get_argument("count")
             
         if(password == os.environ['APIPW']):
             pbPath = "/opt/AnsibleContent/playbook.yaml"
             uid = str(uuid.uuid4())[:8]
             # build command to run an run it
-            cmd = "ansible-playbook {0} --extra-vars 'ownerUserName={1}' > /opt/wwwroot/static/output/{1}_cm.txt 2>&1".format(pbPath,username)
+            cmd = "ansible-playbook {0} --extra-vars 'ownerUserName={1} replSetCount={2}' > /opt/wwwroot/static/output/{1}_cm.txt 2>&1".format(pbPath,username,count)
             subprocess.Popen(cmd, shell=True, cwd="/opt/AnsibleContent",stdout = subprocess.PIPE)
             self.write("Running, "+ username)
 

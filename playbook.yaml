@@ -32,7 +32,7 @@
         instance_type: t2.micro
         image: ami-07efac79022b86107
         wait: yes
-        count: 3
+        count: {{ replSetCount }}
         assign_public_ip: yes
         vpc_subnet_id: subnet-53f0df19
         region: us-east-2

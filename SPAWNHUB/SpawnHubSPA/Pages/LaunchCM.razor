@@ -9,6 +9,8 @@
 @if(!isLoading) {
     <input type="text" @bind="txt_pw" @bind:event="onchange" placeholder="password" class="form-control form-control-lg" />
     <br />
+    <input type="text" @bind="txt_count" @bind:event="onchange" class="form-control form-control-lg" />
+    <br />
     <button class="btn btn-primary btn-lg" @onclick="LaunchIt">Launch a RepSet</button>
 } else {
     <button class="btn btn-primary btn-lg" disabled><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Launching...</button>
@@ -18,6 +20,7 @@
     private Resp r = null;
     private string txt_name = "";
     private string txt_pw="";
+    private string txt_count="3";
     private bool isLoading = false;
 
     private async void LaunchIt()
@@ -27,7 +30,7 @@
         userid = userid.Replace(" ", ".").ToLower();
         
         try{
-            r = await Http.GetFromJsonAsync<Resp>("/api/launchcm/"+userid+"?password="+txt_pw);
+            r = await Http.GetFromJsonAsync<Resp>("/api/launchcm/"+userid+"?password="+txt_pw+"&count="+txt_count);
             Console.WriteLine(r.ToString());
         } catch (Exception ex) {
             Console.WriteLine(ex.ToString());
