@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 LABEL maintainer="chris@grabosky.net"
-LABEL version="1.1.44"
+LABEL version="1.1.51"
 ENV CONTAINER_SHELL=bash
 ENV CONTAINER=
 

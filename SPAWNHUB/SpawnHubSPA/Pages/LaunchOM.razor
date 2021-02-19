@@ -27,7 +27,7 @@
         userid = userid.Replace(" ", ".").ToLower();
         
         try{
-            r = await Http.GetFromJsonAsync<Resp>("/api/launchom/"+userid+"/"+txt_pw);
+            r = await Http.GetFromJsonAsync<Resp>("/api/launchom/"+userid+"?password="+txt_pw);
             Console.WriteLine(r.ToString());
         } catch (Exception ex) {
             Console.WriteLine(ex.ToString());

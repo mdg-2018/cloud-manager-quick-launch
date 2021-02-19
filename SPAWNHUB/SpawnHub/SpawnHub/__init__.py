@@ -26,7 +26,11 @@ class Handler_API_HelloWorld(tornado.web.RequestHandler):
         self.write("Hello, world")
 
 class Handler_CM_API_Launch(tornado.web.RequestHandler):
-    async def get(self, username, password):
+    async def get(self, username):
+        password = ""
+        if self.get_argument("password") != None:
+            password = self.get_argument("password")
+            
         if(password == os.environ['APIPW']):
             pbPath = "/opt/AnsibleContent/playbook.yaml"
             uid = str(uuid.uuid4())[:8]
@@ -36,7 +40,11 @@ class Handler_CM_API_Launch(tornado.web.RequestHandler):
             self.write("Running, "+ username)
 
 class Handler_OM_API_Launch(tornado.web.RequestHandler):
-    async def get(self, username, password):
+    async def get(self, username):
+        password = ""
+        if self.get_argument("password") != None:
+            password = self.get_argument("password")
+            
         if(password == os.environ['APIPW']):
             pbPath = "/opt/AnsibleContent/omPlaybook.yaml"
             uid = str(uuid.uuid4())[:8]
@@ -67,8 +75,8 @@ app= tornado.web.Application([
     (r"/", Handler_Main),
     (r"/api/helloworld", Handler_API_HelloWorld),
     (r"/api/list", Handler_API_List),
-    (r"/api/launchcm/(.*)/(.*)", Handler_CM_API_Launch),
-    (r"/api/launchom/(.*)/(.*)", Handler_OM_API_Launch),
+    (r"/api/launchcm/(.*)", Handler_CM_API_Launch),
+    (r"/api/launchom/(.*)", Handler_OM_API_Launch),
     (r"/css/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/css" }),
     (r"/js/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/js" }),
     (r"/output/(.*)", web.StaticFileHandler, {"path": "/opt/wwwroot/static/output" }),
