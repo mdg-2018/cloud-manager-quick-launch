@@ -45,7 +45,7 @@
         instance_tags:
           Name: mside_launched_cm_instances
           owner: "{{ ownerUserName }}"
-          expire-on: "2020-10-30"
+          expire-on: "{{ expireon }}"
           purpose: "training"
       register: ec2
     - debug:

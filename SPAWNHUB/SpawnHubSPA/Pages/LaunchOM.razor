@@ -7,7 +7,11 @@
 
 <br />
 @if(!isLoading) {
-    <input type="text" @bind="txt_pw" @bind:event="onchange" placeholder="password" class="form-control form-control-lg" />
+    <label for="txt_pw">Validation Password</label>
+    <input id="txt_pw" type="text" @bind="txt_pw" @bind:event="onchange" placeholder="password" class="form-control form-control-lg" />
+    <br />
+    <label for="txt_expire">Expire On Date</label>
+    <input id="txt_expire" type="text" @bind="txt_expire" @bind:event="onchange" class="form-control form-control-lg" />
     <br />
     <button class="btn btn-primary btn-lg" @onclick="LaunchIt">Launch an Ops Manager</button>
 } else {
@@ -19,6 +23,7 @@
     private string txt_name = "";
     private string txt_pw="";
     private bool isLoading = false;
+    private string txt_expire = "";
 
     private async void LaunchIt()
     {
@@ -27,7 +32,7 @@
         userid = userid.Replace(" ", ".").ToLower();
         
         try{
-            r = await Http.GetFromJsonAsync<Resp>("/api/launchom/"+userid+"?password="+txt_pw);
+            r = await Http.GetFromJsonAsync<Resp>("/api/launchom/"+userid+"?password="+txt_pw+"&expire="+txt_expire);
             Console.WriteLine(r.ToString());
         } catch (Exception ex) {
             Console.WriteLine(ex.ToString());
@@ -35,6 +40,11 @@
         
         isLoading = false;
         navmgr.NavigateTo("/Watch/"+userid+"_om", false);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        txt_expire = DateTime.Now.ToString("yyyy-MM-dd");
     }
 
     public class Resp {

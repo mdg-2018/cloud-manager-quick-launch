@@ -18,8 +18,12 @@
         instance_tags:
           Name: mside_launched_om_instances
           owner: "{{ ownerUserName }}"
-          expire-on: "2020-10-30"
+          expire-on: "{{ expireon }}"
           purpose: "training"
       register: ec2
     - debug:
-        msg: "{{ ec2 }}"
+        msg:
+        - "{{ ec2 }}"
+        - "YOUR INSTANCE IS READY."
+        - "Scroll up into the JSON right above here to see the ec2 instance name."
+        - "Just create a new Ops Manager user from the login page"
