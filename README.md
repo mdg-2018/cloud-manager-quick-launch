@@ -3,12 +3,14 @@ An example for automating the deployment of new MongoDB replica sets using AWS, 
 
 # Getting Started
 
-## I'm a MongoDB Employee, using mSIDE
-This is all pre-configured then... go to mside.tech and run there.
+## I'm a MongoDB Employee, using the SM UI
+If you want to use the self-managed UI, visit the application, log in with your account. Upon logging in, you'll need the password protecting the deployment. Get it from the `#presales-self-managed` slack channel. 
+
+You can also get this link off of mside.tech
 
 ## I want to run this on my own
 
-Glad to hear.
+Fun.
 
 ### Step 1: Edit config `deployConfig.json` 
 There is a `deployConfig.sample.json` - rename this to `deployConfig.json` and change the following fields:
@@ -58,5 +60,16 @@ cd /opt/AnsibleContent/
 ansible-playbook playbook.yaml --extra-vars "ownerUserName='chris.grabosky'"
 ```
 
-## Alt execution methodoogy
+## Alt execution methodology
 If your system is already prepped locally with all required files, etc, you can just `deployConfig.json` and then run `ansible-playbook playbook.yaml --extra-vars "ownerUserName='matthew.grogans'"` for example
+
+# Screenshots
+![](Screenshots/01.png)
+
+![](Screenshots/02.png)
+
+![](Screenshots/03.png)
+
+![](Screenshots/04.png)
+
+![](Screenshots/05.png)
