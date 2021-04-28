@@ -25,5 +25,5 @@
         msg:
         - "{{ ec2 }}"
         - "YOUR INSTANCE IS READY."
-        - "Scroll up into the JSON right above here to see the ec2 instance name."
+        - "Scroll up into the JSON right above here to see the ec2 instance name and URL should look like http://ec2-18-221-183-58.us-east-2.compute.amazonaws.com:8080"
         - "Just create a new Ops Manager user from the login page"
