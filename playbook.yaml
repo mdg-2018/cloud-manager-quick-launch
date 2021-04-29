@@ -92,6 +92,7 @@
           - snmp
           - openssl
           - liblzma5
+          - libsensors4
         update_cache: yes
     - name: Disable THP - copy service file
       copy:
