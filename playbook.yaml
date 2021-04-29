@@ -84,10 +84,14 @@
           - libgssapi-krb5-2
           - libkrb5-dbg
           - libldap-2.4-2
+          - libwrap0
           - libpci3
           - libsasl2-2
+          - libsasl2-modules
+          - libsasl2-modules-gssapi-mit
           - snmp
           - openssl
+          - liblzma5
         update_cache: yes
     - name: Disable THP - copy service file
       copy:
