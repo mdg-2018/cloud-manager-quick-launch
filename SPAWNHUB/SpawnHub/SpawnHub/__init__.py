@@ -34,7 +34,7 @@ class Handler_CM_API_Launch(tornado.web.RequestHandler):
         if self.get_argument("password") != None:
             password = self.get_argument("password")
         if self.get_argument("count") != None:
-            password = self.get_argument("count")
+            count = self.get_argument("count")
         if self.get_argument("expire") != None:
             expire = self.get_argument("expire")
             
