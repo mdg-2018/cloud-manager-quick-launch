@@ -25,5 +25,7 @@
         msg:
         - "{{ ec2 }}"
         - "YOUR INSTANCE IS READY."
-        - "Scroll up into the JSON right above here to see the ec2 instance name."
-        - "Just create a new Ops Manager user from the login page"
+        - "Give this like 10 mins to do an OM first boot, then visit:"
+        - "http://{{ ec2 }}:8080"
+        - "Default credentials are sa@mongodemo.com / mongopass0! "
+        - "or you can create a new Ops Manager user from the login page"
