@@ -25,22 +25,26 @@
   hosts: localhost
   vars:
     ansible_python_interpreter: /usr/bin/python3
+    instance_type: "t2.micro"
+    key_name: "gskygrogan_cmdemo"
+    expireon: "{{ ansible_date_time.date }}"
+    disk_size: 10
   tasks:
     - name: launching AWS instance using Ansible
       ec2:
         profile: default
-        instance_type: t2.micro
+        instance_type: "{{ instance_type }}"
         image: ami-07efac79022b86107
         wait: yes
         count: "{{ replSetCount }}"
         assign_public_ip: yes
         vpc_subnet_id: subnet-53f0df19
         region: us-east-2
-        key_name: gskygrogan_cmdemo
+        key_name: "{{ key_name }}"
         volumes:
           - device_name: /dev/xvdb
             volume_type: gp2
-            volume_size: 10
+            volume_size: "{{ disk_size }}"
             delete_on_termination: true
         instance_tags:
           Name: mside_launched_cm_instances
@@ -74,6 +78,8 @@
   become: yes
   vars_files:
     - deployConfig.json
+  vars:
+    disk_size: 10
   tasks:
     - debug:
         msg: "Hostnames: {{ dns_name_pub }}"
@@ -92,7 +98,7 @@
           - snmp
           - openssl
           - liblzma5
-          - libsensors4
+          - libsensors5
         update_cache: yes
     - name: Disable THP - copy service file
       copy:
@@ -149,7 +155,7 @@
         lv: mdb-lv
         state: present
         shrink: no
-        size: 8G
+        size: "{{ disk_size|int - 2 }}G"
     - name: Create xfs filesystem
       filesystem:
         fstype: xfs
@@ -203,13 +209,3 @@
         state: restarted
         name: mongodb-mms-automation-agent
     
-      
-#Use cloud mgr api to deploy replica set
-- hosts: localhost
-  connection: local
-  tasks:
-    - name: show all the hosts matching the pattern, i.e. all but the group www
-      debug:
-        msg: "{{ groups['launched'] }}"
-    - name: deploy rep set
-      shell: "/opt/AnsibleContent/src/deployReplicaSet.py \"{{ groups['launched'] | join(' ')  }}\" > connections/connString.txt"
