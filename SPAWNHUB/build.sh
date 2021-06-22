@@ -47,7 +47,7 @@ cp ../ansible.cfg ./AnsibleContent/
 cp ../automation-agent.j2 ./AnsibleContent/
 cp ../deployConfig.json ./AnsibleContent/
 cp ../playbook.yaml ./AnsibleContent/
-cp ../omPlaybook.yaml ./AnsibleContent/
+cp ../omPlaybook* ./AnsibleContent/
 cp ../gskygrogan_cmdemo.pem ./AnsibleContent/key.pem
 cp ../credentials ./
 cp ../awsconfig ./awsconfig
