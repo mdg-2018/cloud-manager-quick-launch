@@ -159,8 +159,8 @@
         tiles.Add(new Tile{ Title="L3 - Topics", 
                             Icon="/resources/contentimg_gsheets.png", 
                             Link="https://docs.google.com/spreadsheets/d/1hUza5s0s317L6PzzJRsdk1h-zxNK1G_ED4be9GAcjZM/edit?usp=sharing", 
-                            Description="Level 3 Topic Lists",
-                            Grouping="6. Level 3 for your development plans"});
+                            Description="Level 3 Topic Lists for your development plans",
+                            Grouping="6. Level 3"});
 
         queryGroups =  from t in tiles  group t by t.Grouping into newGroup orderby newGroup.Key select newGroup;
         
