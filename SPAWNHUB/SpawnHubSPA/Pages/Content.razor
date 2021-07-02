@@ -8,18 +8,25 @@
 <br />
 
 <div class="container">
-    <div class="d-flex flex-wrap">
-        @if(tiles != null) {
-            @foreach (var t in tiles)
-            {
-                <div class="card" style="width: 18rem;float:left;margin:10px;">
-                    <img class="card-img-top" height="200" style="object-fit: cover;" src=@t.Icon >
-                    <div class="card-body">
-                        <h5 class="card-title">@t.Title</h5>
-                        <p class="card-text">@t.Description</p>
-                        <a href=@t.Link class="btn btn-primary" target="_blank">Open</a>
-                    </div>
+    <div class="">
+        @if(tiles != null && queryGroups != null) {
+            @foreach (var tileGroup in queryGroups) {
+                <div class="row" style="margin-top:20px;">
+                    <h3>@tileGroup.Key</h3>
                 </div>
+                <div class="row"><div class="d-flex flex-wrap">
+                    @foreach (var t in tileGroup)
+                    {
+                        <div class="card" style="width: 18rem;float:left;margin:10px;">
+                            <img class="card-img-top" height="200" style="object-fit: cover;" src=@t.Icon >
+                            <div class="card-body">
+                                <h5 class="card-title">@t.Title</h5>
+                                <p class="card-text">@t.Description</p>
+                                <a href=@t.Link class="btn btn-primary" target="_blank">Open</a>
+                            </div>
+                        </div>
+                    }
+                </div></div>
             }
         }
     </div>
@@ -29,12 +36,14 @@
 
 @code {
     private List<Tile> tiles = null;
+    private IEnumerable<IGrouping<string, Tile>> queryGroups = null;
 
     public class Tile {
         public string Link { get; set; }
         public string Icon { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Grouping {get;set;}
     }
 
     protected override async Task OnInitializedAsync()
@@ -45,85 +54,110 @@
         tiles.Add(new Tile{ Title="Highspot", 
                             Icon="/resources/contentimg_highspot.jpg", 
                             Link="https://mongodb.highspot.com/spots/5f7627fc66bbaa55f542a763", 
-                            Description="Self-Managed landing page for all content within HighSpot"});
+                            Description="Self-Managed landing page for all content within HighSpot",
+                            Grouping="1. Main Resources"});
         tiles.Add(new Tile{ Title="Slack", 
                             Icon="/resources/contentimg_slack.png", 
                             Link="https://mongodb.slack.com/archives/C01B1P0U36U", 
-                            Description="Our slack homepage is #presales-self-managed"});
+                            Description="Our slack homepage is #presales-self-managed",
+                            Grouping="1. Main Resources"});
         tiles.Add(new Tile{ Title="Kafka Connector", 
                             Icon="/resources/contentimg_kafka.png", 
                             Link="http://kafka.mside.tech:9021/", 
-                            Description="Kafka Connector endpoint"});
+                            Description="Kafka Connector endpoint",
+                            Grouping="1. Main Resources"});
         tiles.Add(new Tile{ Title="CE Internal Training", 
                             Icon="/resources/contentimg_training.png", 
                             Link="https://ceportal-lkgab.mongodbstitch.com/PSTT.html", 
-                            Description="MongoDB Consulting Engineer Training"});
+                            Description="MongoDB Consulting Engineer Training to do deeper dives into topics",
+                            Grouping="1. Main Resources"});
 
         // overview
         tiles.Add(new Tile{ Title="Design Overview", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1pM11zddHaX1rDySpk0dAtr3rmAL9GMvtVizFhPMsgqY/edit#slide=id.ga3e4658276_0_2315", 
-                            Description="Overview and plan for self-managed focus area"});
+                            Description="Overview and plan for self-managed focus area",
+                            Grouping="2. FA Design Docs"});
+        tiles.Add(new Tile{ Title="L3 - Topics", 
+                            Icon="/resources/contentimg_gsheets.png", 
+                            Link="https://docs.google.com/spreadsheets/d/1hUza5s0s317L6PzzJRsdk1h-zxNK1G_ED4be9GAcjZM/edit?usp=sharing", 
+                            Description="Level 3 Topic Lists for your development plans",
+                            Grouping="2. FA Design Docs"});
         
         // L1
         tiles.Add(new Tile{ Title="L1 - OM", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/13ow8TgcdwykBJTQ_U0VMRGNll9uvzeqLfmZ037e-KRs/edit", 
-                            Description="Level 1 Content - Ops Manager"});
+                            Description="Level 1 Content - Ops Manager",
+                            Grouping="3. Level 1"});
         tiles.Add(new Tile{ Title="L1 - CM", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1uT4Cl8DUCBAi9fPWP8RdU0rHy0La8eDmn4uzpUtTI9c/edit#slide=id.ga507b262b1_0_342", 
-                            Description="Level 1 Content - Cloud Manager"});
+                            Description="Level 1 Content - Cloud Manager",
+                            Grouping="3. Level 1"});
         tiles.Add(new Tile{ Title="L1 - K8S", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/13ED7Q6ZD6HD9Iv0mMA_xVjIMluz4Fa-RyRKqGsxdj0A/edit#slide=id.ga507b262b1_0_93", 
-                            Description="Level 1 Content - Kubernetes Operator"});
+                            Description="Level 1 Content - Kubernetes Operator",
+                            Grouping="3. Level 1"});
         tiles.Add(new Tile{ Title="L1 - Kafka", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1VLtdV-9JsbOAM9o7UMmpxPsO9ZKl7Gzru64ExYkZHLo/edit#slide=id.ga507b262b1_0_342", 
-                            Description="Level 1 Content - Kafka Connector"});
+                            Description="Level 1 Content - Kafka Connector",
+                            Grouping="3. Level 1"});
         tiles.Add(new Tile{ Title="L1 - Security", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1LdaRSJDdtn8ZylWz2DJJvW5X0B-4iOqL_02ksKBGsZ0/edit#slide=id.ga507b262b1_0_342", 
-                            Description="Level 1 Content - Security"});
+                            Description="Level 1 Content - Security",
+                            Grouping="3. Level 1"});
         tiles.Add(new Tile{ Title="L1 - Deployment", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1qS6xy-B1zUlqrQ9LDtLXxaNzFITpm7ldksPHZd1cPE4/edit#slide=id.ga507b262b1_0_342", 
-                            Description="Level 1 Content - Deployment"});
+                            Description="Level 1 Content - Deployment",
+                            Grouping="3. Level 1"});
 
         // L2
         tiles.Add(new Tile{ Title="L2 - OM and CM", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1y1k5VW8UGNX7zuA624D3LfDi5YNbmT5Oxw6UbqsSysY/edit#slide=id.gb1d0068ba8_1_292", 
-                            Description="Level 2 Content - Ops Manager and Cloud Manager (Combined)"});
+                            Description="Level 2 Content - Ops Manager and Cloud Manager (Combined)",
+                            Grouping="4. Level 2"});
         tiles.Add(new Tile{ Title="L2 - K8S", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1PLwFrFWM8uvLJxEpshv06k9Z9VaAT5ACYbQe3uPgDU4/edit?ts=60106ee0#slide=id.gb8c08ca8f0_0_6002", 
-                            Description="Level 2 Content - Kubernetes Operator"});
+                            Description="Level 2 Content - Kubernetes Operator",
+                            Grouping="4. Level 2"});
         tiles.Add(new Tile{ Title="L2 - Kafka", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1bWTY6m2cShiyp_XB10GVFVyG380Ip9iXX_Dcf1ktjyc/edit?usp=sharing", 
-                            Description="Level 2 Content - Kafka Connector"});
+                            Description="Level 2 Content - Kafka Connector",
+                            Grouping="4. Level 2"});
         tiles.Add(new Tile{ Title="L2 - Security", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1eAtpeA36i8ID-GHYOaiBuarD-ZzD5P1yzXT1mqpli34/edit?usp=sharing", 
-                            Description="Level 2 Content - Security"});
+                            Description="Level 2 Content - Security",
+                            Grouping="4. Level 2"});
         tiles.Add(new Tile{ Title="L2 - Deployment", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1d3_OgrTyh63fYQMPyDBWccXi_CplvqgXQL1AnW61Edo/edit?usp=sharing", 
-                            Description="Level 2 Content - Deployment"});
+                            Description="Level 2 Content - Deployment",
+                            Grouping="4. Level 2"});
 
         // L2 Comp
         tiles.Add(new Tile{ Title="L2 - Competition", 
                             Icon="/resources/contentimg_gslides.png", 
                             Link="https://docs.google.com/presentation/d/1Y0-9oGWXkYGY-nd4nxrovuGuIOLqPLL1prats0aYqhs/edit", 
-                            Description="Level 2 Content - Competition"});
+                            Description="Level 2 Content - Competition",
+                            Grouping="5. Competition"});
 
-        // L3 trackers
+        // L3
         tiles.Add(new Tile{ Title="L3 - Topics", 
                             Icon="/resources/contentimg_gsheets.png", 
                             Link="https://docs.google.com/spreadsheets/d/1hUza5s0s317L6PzzJRsdk1h-zxNK1G_ED4be9GAcjZM/edit?usp=sharing", 
-                            Description="Level 3 Topic Lists"});
+                            Description="Level 3 Topic Lists",
+                            Grouping="6. Level 3 for your development plans"});
+
+        queryGroups =  from t in tiles  group t by t.Grouping into newGroup orderby newGroup.Key select newGroup;
         
     }
 
