@@ -202,4 +202,6 @@
       systemd:
         state: restarted
         name: mongodb-mms-automation-agent
+    - debug:
+        msg: "Nodes are up and running! You should see these nodes under the servers tab in Ops Manager or Cloud Manager."
     
