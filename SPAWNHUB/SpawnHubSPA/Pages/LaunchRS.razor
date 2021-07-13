@@ -1,0 +1,158 @@
+@page "/LaunchCM"
+@page "/LaunchRS"
+@inject HttpClient Http;
+@inject NavigationManager navmgr;
+@inject IJSRuntime JSRuntime;
+
+<h1>Launch A Replica Set</h1>
+
+<div class="card" style="margin-bottom:30px;">
+        <h5 class="card-header" style="background-color:var(--gsky-bg-secondary) !important;color:#fff !important;">Register this RS with...</h5>
+        <div class="card-body">
+            <p class="card-text">
+                <select id="ddl_target" name="ddl_target" class="form-control" @onchange=@TargetChanged>
+                    <option>Cloud Manager</option>
+                    <option>Your Ops Manager</option>
+                </select>
+            </p>
+        </div>
+    </div>
+
+@if(!isLoading) {
+    <div class="card" style="margin-bottom:30px;">
+        <h5 class="card-header" style="background-color:var(--gsky-bg-secondary) !important;color:#fff !important;">Access Control</h5>
+        <div class="card-body">
+            <p class="card-text">
+                <label for="txt_pw">Script Validation Password (see mside.tech for this)</label>
+                <input id="txt_pw" type="text" @bind="txt_pw" @bind:event="onchange" placeholder="password" class="form-control form-control-lg" />
+            </p>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:30px;">
+        <h5 class="card-header" style="background-color:var(--gsky-bg-secondary) !important;color:#fff !important;">Replica Set Details</h5>
+        <div class="card-body">
+            <p class="card-text">
+                <label for="txt_rscount">Nodes in Replica Set</label>
+                <input id="txt_rscount" type="text" @bind="txt_count" @bind:event="onchange" class="form-control form-control-lg" />
+                <br />
+                <label for="txt_expire">Node AWS Expire On Date</label>
+                <input id="txt_expire" type="text" @bind="txt_expire" @bind:event="onchange" class="form-control form-control-lg" />
+                <br />
+                <label for="disk_size">Node Disk Size</label>
+                <input id="disk_size" type="text" @bind="disk_size" @bind:event="onchange" class="form-control form-control-lg" />
+                <br />
+                <label for="node_agentVersion">Agent Version</label>
+                <input id="node_agentVersion" type="text" @bind="node_agentVersion" @bind:event="onchange" class="form-control form-control-lg" />
+                <br />
+                <label for="node_instance_type">Instance Size</label>
+                <input id="node_instance_type" type="text" @bind="node_instance_type" @bind:event="onchange" readonly class="form-control form-control-lg" />
+                <br />
+                <label for="node_key_name">AWS Key Name</label>
+                <input id="node_key_name" type="text" @bind="node_key_name" @bind:event="onchange" class="form-control form-control-lg" />
+            </p>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:30px;">
+        <h5 class="card-header" style="background-color:var(--gsky-bg-secondary) !important;color:#fff !important;">Management Plane Details</h5>
+        <div class="card-body">
+            @if(target=="Cloud Manager") {
+                <p class="card-text"><i>Leaving defaults (blank) for CM means we will deploy per instructions in sidebar at mside.tech</i></p>
+            }
+            <p class="card-text">
+                <label for="node_rootURL">Root URL</label>
+                <input id="node_rootURL" type="text" @bind="node_rootURL" @bind:event="onchange" class="form-control form-control-lg" />
+                <br />
+                <label for="node_mmsGroupId">MMS Group ID</label>
+                <input id="node_mmsGroupId" type="text" @bind="node_mmsGroupId" @bind:event="onchange" class="form-control form-control-lg" />
+                <br />
+                <label for="node_mmsApiKey">MMS API Key</label>
+                <input id="node_mmsApiKey" type="text" @bind="node_mmsApiKey" @bind:event="onchange" class="form-control form-control-lg" />
+            </p>
+        </div>
+    </div>
+
+    <br />
+
+    @if((node_mmsGroupId == "") || (node_mmsApiKey=="") || (node_rootURL=="")) {
+        <button class="btn btn-danger btn-lg" disabled>You must fill in a MMS group ID and API key and Root URL</button>
+    } else {
+        <button class="btn btn-primary btn-lg" @onclick="LaunchIt">Launch a RepSet</button>
+    }
+} else {
+    <button class="btn btn-primary btn-lg" disabled><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Launching...</button>
+}
+
+<br /><br />
+
+@code {
+    private Resp r = null;
+    private string txt_name,txt_pw,txt_expire = "";
+    private string node_rootURL,node_mmsGroupId,node_mmsApiKey,node_agentVersion,node_key_name,node_replSetCount,
+        node_instance_type,om_ansible_python_interpreter,disk_size,om_key_name,ansible_ssh_private_key_file,ansible_python_interpreter = "";
+    private string target = "";
+    private string txt_count="3";
+    private bool isLoading = false;
+
+
+    private void TargetSetDefaults(string t) {
+        target = t;
+        node_agentVersion= "10.20.1.6618-1";
+        node_key_name= "gskygrogan_cmdemo";
+        node_instance_type= "t2.micro";
+        om_ansible_python_interpreter= "/usr/bin/python3";
+        om_key_name= "gskygrogan_cmdemo";
+        ansible_ssh_private_key_file= "/opt/AnsibleContent/key.pem";
+        ansible_python_interpreter= "/usr/bin/python3";
+
+        if(target == "Cloud Manager") {
+            node_rootURL= "https://cloud.mongodb.com";
+            node_mmsGroupId= "";
+            node_mmsApiKey= "";
+            disk_size= "10";
+        } else {
+            node_rootURL= "";
+            node_mmsGroupId= "";
+            node_mmsApiKey= "";
+            disk_size= "100";
+        }
+    }
+
+    private void TargetChanged(ChangeEventArgs e)
+    {
+        TargetSetDefaults(e.Value.ToString());
+    }
+
+    private async void LaunchIt()
+    {
+        isLoading = true;
+        string userid = await JSRuntime.InvokeAsync<string>("getCurrentUserName");
+        userid = userid.Replace(" ", ".").ToLower();
+        
+        try{
+            r = await Http.GetFromJsonAsync<Resp>("/api/launchcm/"+userid+"?password="+txt_pw+"&count="+txt_count+"&expire="+txt_expire+"&node_agentVersion="+node_agentVersion
+                +"&node_key_name="+node_key_name+"&node_instance_type="+node_instance_type+"&om_ansible_python_interpreter="+om_ansible_python_interpreter
+                +"&om_key_name="+om_key_name+"&ansible_ssh_private_key_file="+ansible_ssh_private_key_file+"&ansible_python_interpreter="+ansible_python_interpreter
+                +"&node_rootURL="+node_rootURL+"&node_mmsGroupId="+node_mmsGroupId+"&node_mmsApiKey="+node_mmsApiKey+"&disk_size="+disk_size);
+            Console.WriteLine(r.ToString());
+        } catch (Exception ex) {
+            Console.WriteLine(ex.ToString());
+        }
+        
+        isLoading = false;
+        navmgr.NavigateTo("/Watch/"+userid+"_cm", false);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        txt_count = "3";
+        txt_expire = DateTime.Now.ToString("yyyy-MM-dd");
+        TargetSetDefaults("Cloud Manager");
+    }
+
+    public class Resp {
+        public string name { get; set; }
+    }
+
+}

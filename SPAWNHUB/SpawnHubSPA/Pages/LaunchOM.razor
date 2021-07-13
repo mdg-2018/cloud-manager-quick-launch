@@ -7,12 +7,37 @@
 
 <br />
 @if(!isLoading) {
-    <label for="txt_pw">Validation Password</label>
-    <input id="txt_pw" type="text" @bind="txt_pw" @bind:event="onchange" placeholder="password" class="form-control form-control-lg" />
-    <br />
-    <label for="txt_expire">Expire On Date</label>
-    <input id="txt_expire" type="text" @bind="txt_expire" @bind:event="onchange" class="form-control form-control-lg" />
-    <br />
+    <div class="card" style="margin-bottom:30px;">
+        <h5 class="card-header" style="background-color:var(--gsky-bg-secondary) !important;color:#fff !important;">Access Control</h5>
+        <div class="card-body">
+            <p class="card-text">
+                <label for="txt_pw">Script Validation Password (see mside.tech for this)</label>
+                <input id="txt_pw" type="text" @bind="txt_pw" @bind:event="onchange" placeholder="password" class="form-control form-control-lg" />
+            </p>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:30px;">
+        <h5 class="card-header" style="background-color:var(--gsky-bg-secondary) !important;color:#fff !important;">OM Node Details</h5>
+        <div class="card-body">
+            <p class="card-text">
+                <label for="txt_expire">Server AWS Expire On Date</label>
+                <input id="txt_expire" type="text" @bind="txt_expire" @bind:event="onchange" class="form-control form-control-lg" />
+                <br />
+                <label for="disk_size">Node Disk Size</label>
+                <input id="disk_size" type="text" @bind="disk_size" @bind:event="onchange" class="form-control form-control-lg" />
+                <br />
+                <label for="node_instance_type">Instance Size</label>
+                <input id="node_instance_type" type="text" @bind="node_instance_type" @bind:event="onchange" readonly class="form-control form-control-lg" />
+                <br />
+                <label for="om_key_name">AWS Key Name</label>
+                <input id="om_key_name" type="text" @bind="om_key_name" @bind:event="onchange" class="form-control form-control-lg" />
+            </p>
+        </div>
+    </div>
+    
+
+    <br /><br />
     <button class="btn btn-primary btn-lg" @onclick="LaunchIt">Launch an Ops Manager</button>
 } else {
     <button class="btn btn-primary btn-lg" disabled><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Launching...</button>
@@ -24,6 +49,8 @@
     private string txt_pw="";
     private bool isLoading = false;
     private string txt_expire = "";
+     private string node_rootURL,node_mmsGroupId,node_mmsApiKey,node_agentVersion,node_key_name,node_replSetCount,
+        node_instance_type,om_ansible_python_interpreter,disk_size,om_key_name,ansible_ssh_private_key_file,ansible_python_interpreter = "";
 
     private async void LaunchIt()
     {
@@ -32,7 +59,10 @@
         userid = userid.Replace(" ", ".").ToLower();
         
         try{
-            r = await Http.GetFromJsonAsync<Resp>("/api/launchom/"+userid+"?password="+txt_pw+"&expire="+txt_expire);
+            r = await Http.GetFromJsonAsync<Resp>("/api/launchom/"+userid+"?password="+txt_pw+"&expire="+txt_expire+"&node_agentVersion="+node_agentVersion
+                +"&node_key_name="+node_key_name+"&node_instance_type="+node_instance_type+"&om_ansible_python_interpreter="+om_ansible_python_interpreter
+                +"&om_key_name="+om_key_name+"&ansible_ssh_private_key_file="+ansible_ssh_private_key_file+"&ansible_python_interpreter="+ansible_python_interpreter
+                +"&node_rootURL="+node_rootURL+"&node_mmsGroupId="+node_mmsGroupId+"&node_mmsApiKey="+node_mmsApiKey+"&disk_size="+disk_size);
             Console.WriteLine(r.ToString());
         } catch (Exception ex) {
             Console.WriteLine(ex.ToString());
@@ -45,6 +75,14 @@
     protected override async Task OnInitializedAsync()
     {
         txt_expire = DateTime.Now.ToString("yyyy-MM-dd");
+        disk_size = "100";
+        node_agentVersion= "10.20.1.6618-1";
+        node_key_name= "gskygrogan_cmdemo";
+        node_instance_type= "t3.xlarge";
+        om_ansible_python_interpreter= "/usr/bin/python3";
+        om_key_name= "gskygrogan_cmdemo";
+        ansible_ssh_private_key_file= "/opt/AnsibleContent/key.pem";
+        ansible_python_interpreter= "/usr/bin/python3";
     }
 
     public class Resp {
