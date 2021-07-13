@@ -1,11 +1,8 @@
 # Launch EC2 Instances
-- name: Ansible test
+- name: Launch EC2
   hosts: localhost
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
-    disk_size: 100
-    expireon: "{{ ansible_date_time.date }}"
-    key_name: gskygrogan_cmdemo
+  vars_files:
+    - deployConfig.json
   tasks:
     - name: launching ops manager instance
       ec2:
@@ -17,15 +14,16 @@
         assign_public_ip: yes
         vpc_subnet_id: subnet-53f0df19
         region: us-east-2
-        key_name: "{{ key_name }}"
+        key_name: "{{ om_key_name }}"
         volumes:
-          - device_name: /dev/xvdb
+          - device_name: /dev/sdb
             volume_type: gp2
-            volume_size: "{{ disk_size }}"
+            volume_size: "{{ om_disk_size }}"
+            delete_on_termination: true
         instance_tags:
           Name: mside_launched_om_instances
           owner: "{{ ownerUserName }}"
-          expire-on: "{{ expireon }}"
+          expire-on: "{{ om_expireon }}"
           purpose: "training"
       register: ec2
     - name: Add new instance to host group
@@ -48,10 +46,6 @@
   become: yes
   vars_files:
     - deployConfig.json
-  vars:
-    disk_size: 100
-    mdb_community_link: "https://repo.mongodb.org/apt/ubuntu/dists/focal/mongodb-org/4.4/multiverse/binary-amd64/mongodb-org-server_4.4.6_amd64.deb"
-    om_download_link: "https://downloads.mongodb.com/on-prem-mms/deb/mongodb-mms_4.4.14.100.20210610T1502Z-1_x86_64.deb"
   tasks:
     - debug:
         msg: "Hostnames: {{ dns_name_pub }}"
@@ -91,14 +85,14 @@
         state: directory
     - name: Create a new primary partition
       parted:
-        device: /dev/xvdb
+        device: /dev/nvme1n1
         number: 1
         flags: [ lvm ]
         state: present
     - name: Create volume group for MongoDB data volume
       lvg:
         vg: mdb-vg
-        pvs: /dev/xvdb1
+        pvs: /dev/nvme1n1p1
         state: present
     - name: Create logical volume for MongoDB data volume
       lvol:
@@ -106,7 +100,7 @@
         lv: mdb-lv
         state: present
         shrink: no
-        size: "{{ disk_size|int - 2 }}G"
+        size: "{{ om_disk_size|int - 2 }}G"
     - name: Create xfs filesystem
       filesystem:
         fstype: xfs
@@ -117,6 +111,10 @@
         src: /dev/mdb-vg/mdb-lv
         fstype: xfs
         state: mounted
+    # install mongodb
+    - name: Install MongoDB community (for app/oplog/blockstore databases)
+      apt:
+        deb: "{{ om_mdb_community_link }}"
     - name: Create directory for app db
       file:
         path: /data/appdb
@@ -148,23 +146,19 @@
         path: /data/blockstoredb
         owner: mongodb
         group: mongodb
-    - name: Change owner of MongoDB data directory for headdb
-      file:
-        path: /data/headdb
-        owner: mongodb
-        group: mongodb
     ## TODO: set this up with some proper DNS since public hostname on aws instances can change after reboot! Or just use private dns name... idk...
     - name: set hostname
       hostname:
         name: "{{ dns_name_pub }}"
-    # install mongodb
-    - name: Install MongoDB community (for app/oplog/blockstore databases)
-      apt:
-        deb: "{{ mdb_community_link }}"
     # download and install ops manager
     - name: Install ops manager
       apt:
         deb: "{{ om_download_link }}"
+    - name: Change owner of MongoDB data directory for headdb
+      file:
+        path: /data/headdb
+        owner: mongodb-mms
+        group: mongodb-mms
     # create conf files for each of the three databases
     - name: Write mongo config files
       template:
@@ -207,15 +201,22 @@
     - name: Start and enable OplogDB
       systemd:
         state: started
-        name: mongod-oplog
+        name: mongod-oplogdb
         enabled: yes
     - name: Start and enable BlockstoreDB
       systemd:
         state: started
-        name: mongod-blockstore
+        name: mongod-blockstoredb
         enabled: yes
+    # copy new ops manager config file
+    - name: Ops Manager conf-mms.properties file
+      template:
+        src: omPlaybook_conf-mms-properties.j2
+        dest: /opt/mongodb/mms/conf/conf-mms.properties
+        mode: '0644'
     # start and enable ops manager service
     - name: Start ops manager service
       systemd:
         state: started
+        name: mongodb-mms
         enabled: yes

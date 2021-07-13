@@ -10,8 +10,10 @@ storage:
     enabled: true
 #  engine:
 #  mmapv1:
-#  wiredTiger:
-
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: 1
+      
 # where to write logging data.
 systemLog:
   destination: file
