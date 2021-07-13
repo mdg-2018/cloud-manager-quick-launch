@@ -220,3 +220,5 @@
         state: started
         name: mongodb-mms
         enabled: yes
+    - debug:
+        msg: "Connect to ops manager at http://{{ dns_name_pub }}:8080 --- It may take a few more minutes to start up!"
