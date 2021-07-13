@@ -23,29 +23,29 @@
 # Launch EC2 Instances
 - name: Ansible test
   hosts: localhost
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
+  vars_files:
+    - deployConfig.json
   tasks:
     - name: launching AWS instance using Ansible
       ec2:
         profile: default
-        instance_type: t2.micro
+        instance_type: "{{ node_instance_type }}"
         image: ami-07efac79022b86107
         wait: yes
-        count: "{{ replSetCount }}"
+        count: "{{ node_replSetCount }}"
         assign_public_ip: yes
         vpc_subnet_id: subnet-53f0df19
         region: us-east-2
-        key_name: gskygrogan_cmdemo
+        key_name: "{{ node_key_name }}"
         volumes:
           - device_name: /dev/xvdb
             volume_type: gp2
-            volume_size: 10
+            volume_size: "{{ node_disk_size }}"
             delete_on_termination: true
         instance_tags:
-          Name: mside_launched_cm_instances
+          Name: mside_launched_mongod_nodes
           owner: "{{ ownerUserName }}"
-          expire-on: "{{ expireon }}"
+          expire-on: "{{ node_expireon }}"
           purpose: "training"
       register: ec2
     - debug:
@@ -92,7 +92,7 @@
           - snmp
           - openssl
           - liblzma5
-          - libsensors4
+          - libsensors5
         update_cache: yes
     - name: Disable THP - copy service file
       copy:
@@ -122,7 +122,7 @@
     #     enabled: yes
     - name: Install agent from cloud manager.
       apt:
-        deb: "{{ rootURL }}/download/agent/automation/mongodb-mms-automation-agent-manager_10.20.1.6618-1_amd64.ubuntu1604.deb"
+        deb: "{{ node_rootURL }}/download/agent/automation/mongodb-mms-automation-agent-manager_{{ node_agentVersion }}_amd64.ubuntu1604.deb"
     - name: Write mongo config files
       template:
         src: automation-agent.j2
@@ -149,7 +149,7 @@
         lv: mdb-lv
         state: present
         shrink: no
-        size: 8G
+        size: "{{ node_disk_size|int - 2 }}G"
     - name: Create xfs filesystem
       filesystem:
         fstype: xfs
@@ -203,13 +203,3 @@
         state: restarted
         name: mongodb-mms-automation-agent
     
-      
-#Use cloud mgr api to deploy replica set
-- hosts: localhost
-  connection: local
-  tasks:
-    - name: show all the hosts matching the pattern, i.e. all but the group www
-      debug:
-        msg: "{{ groups['launched'] }}"
-    - name: deploy rep set
-      shell: "/opt/AnsibleContent/src/deployReplicaSet.py \"{{ groups['launched'] | join(' ')  }}\" > connections/connString.txt"
