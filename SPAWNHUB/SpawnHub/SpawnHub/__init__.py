@@ -65,6 +65,8 @@ class Handler_CM_API_Launch(tornado.web.RequestHandler):
             node_mmsApiKey = self.get_argument("node_mmsApiKey")
         if self.get_argument("disk_size") != None:
             disk_size = self.get_argument("disk_size")
+        if self.get_argument("expire") != None:
+            expire = self.get_argument("expire")
 
         if((node_mmsGroupId == "") and (node_mmsApiKey == "")):
             with open('/opt/AnsibleContent/deployConfig.json', 'r') as myfile:
