@@ -167,6 +167,13 @@
                             Description="Level 3 Topic Lists for your development plans",
                             Grouping="6. Level 3"});
 
+        // L4
+        tiles.Add(new Tile{ Title="L4 - Capstone", 
+                            Icon="/resources/contentimg_gdocs.png", 
+                            Link="https://docs.google.com/document/d/1R_I3nz1X86BYAxYXThehG130kBtMis3ZJR6OSkBZ8ic/edit?usp=sharing", 
+                            Description="Level 4 example Capstone",
+                            Grouping="7. Level 4"});
+
         queryGroups =  from t in tiles  group t by t.Grouping into newGroup orderby newGroup.Key select newGroup;
         
     }
