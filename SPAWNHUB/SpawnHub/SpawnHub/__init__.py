@@ -30,7 +30,7 @@ class Handler_CM_API_Launch(tornado.web.RequestHandler):
         doRun = False
         # if there is an auth checker, run it
         if "AUTHCHECKURL" in os.environ:
-            resp = requests.get(os.environ['AUTHCHECKURL'])
+            resp = requests.get(os.environ['AUTHCHECKURL']+"&email="+username)
             if resp.json():
                 # everything checks out via auth, json was returned... 
                 doRun = True
@@ -100,7 +100,7 @@ class Handler_OM_API_Launch(tornado.web.RequestHandler):
         doRun = False
         # if there is an auth checker, run it
         if "AUTHCHECKURL" in os.environ:
-            resp = requests.get(os.environ['AUTHCHECKURL'])
+            resp = requests.get(os.environ['AUTHCHECKURL']+"&email="+username)
             if resp.json():
                 # everything checks out via auth, json was returned... 
                 doRun = True
