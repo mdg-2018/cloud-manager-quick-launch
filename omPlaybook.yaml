@@ -8,7 +8,7 @@
       ec2:
         profile: default
         instance_type: t3.xlarge
-        image: ami-07efac79022b86107 
+        image: ami-0cbea92f2377277a4 
         wait: yes
         count: 1 
         assign_public_ip: yes
@@ -49,6 +49,11 @@
   tasks:
     - debug:
         msg: "Hostnames: {{ dns_name_pub }}"
+    - name: Upgrade packages
+      apt:
+        name: "*"
+        state: latest
+        update_cache: yes
     - name: Install MongoDB Enterprise dependencies
       apt:
         pkg: 

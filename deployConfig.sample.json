@@ -12,8 +12,8 @@
     "om_disk_size": 100,
     "om_expireon": "{{ ansible_date_time.date }}",
     "om_key_name": "gskygrogan_cmdemo",
-    "om_mdb_community_link": "https://repo.mongodb.org/apt/ubuntu/dists/focal/mongodb-org/4.4/multiverse/binary-amd64/mongodb-org-server_4.4.6_amd64.deb",
-    "om_download_link":"https://downloads.mongodb.com/on-prem-mms/deb/mongodb-mms_4.4.14.100.20210610T1502Z-1_x86_64.deb",
+    "om_mdb_community_link": "https://repo.mongodb.org/apt/ubuntu/dists/focal/mongodb-org/6.0/multiverse/binary-amd64/mongodb-org-server_6.0.2_amd64.deb",
+    "om_download_link":"https://downloads.mongodb.com/on-prem-mms/deb/mongodb-mms-6.0.7.100.20221129T1444Z.amd64.deb",
     "ansible_ssh_private_key_file": "/opt/AnsibleContent/key.pem",
     "ansible_python_interpreter": "/usr/bin/python3"
 }
